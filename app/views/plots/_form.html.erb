@@ -1,0 +1,18 @@
+<%= simple_form_for(@plot) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :title %>
+    <%= f.input :user_id, as: :hidden %>
+    <%= f.input :tags_list %>
+    <%= f.input :image %>
+    <%= f.input :description %>
+    <%= f.input :data %>
+    <%= f.input :options %>
+    <%= f.input :default_type, collection: ["line", "bar", "radar", "pie", "doughnut"] %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

@@ -1,0 +1,132 @@
+<div class="col-md-12">
+
+<div class="col-md-8" >
+<br/>
+        <div class="dropdown pull-right">
+          <button id="dLabel" type="button" class="btn btn-sm btn-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Plot Type: <span id="type_selected"></span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu plot_types" aria-labelledby="dLabel">
+            <li><a href="#bar" data="bar">Bar</a></li>
+            <li><a href="#line" data="line">Line</a></li>
+            <li><a href="#pie" data="pie">Pie</a></li>
+            <li><a href="#pie" data="radar">Radar</a></li>
+            <li><a href="#pie" data="doughnut">Doughnut</a></li>
+          </ul>
+        </div>
+<h1>
+  <%= @plot.title %>
+</h1>
+
+<hr/>
+
+  <canvas id="myChart" width="600" height="600"></canvas>
+</div>
+
+<div class="col-md-4">
+
+<p id="image"></p>
+
+
+
+ <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#about" aria-controls="about" role="tab" data-toggle="tab">About</a></li>
+    <li role="presentation"><a href="#data" aria-controls="data" role="tab" data-toggle="tab">Data</a></li>
+    <li role="presentation"><a href="#options" aria-controls="options" role="tab" data-toggle="tab">Options</a></li>
+    <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+  </ul>
+  <br/>
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="about">
+      <p class="well">
+      <%= @plot.description %>
+    </p>
+
+    </div>
+    <div role="tabpanel" class="tab-pane" id="data">
+      
+      <strong>Data</strong>
+      <textarea id="data_area" cols="40" rows="20">
+
+      </textarea>
+
+
+    </div>
+    <div role="tabpanel" class="tab-pane" id="options">
+      <strong>Options</strong>
+      <textarea id="options" cols="40" rows="10">
+      <%= @plot.options %>
+      </textarea>  
+
+    </div>
+    <div role="tabpanel" class="tab-pane" id="settings">
+        <p>
+          <strong>Default type:</strong>
+          <%= @plot.default_type %>
+        </p>
+
+
+        <br/>
+    </div>
+  </div>
+
+
+<%= link_to 'Edit', edit_plot_path(@plot) %> |
+<%= link_to 'Back', plots_path %>
+
+
+</div>
+
+</div>
+
+<script type="text/javascript">
+  
+// Any of the following formats may be used
+// var ctx = document.getElementById("myChart");
+// var ctx = document.getElementById("myChart").getContext("2d");
+var ctx = $("#myChart");
+
+var data = <%= raw @data %>;
+
+var pretty = JSON.stringify(data, null, 2);
+
+$("#data_area").text(pretty);
+
+var chartInstance = new Chart(ctx, {
+    type: "<%= @plot.default_type %>",
+    data: <%= raw @data %> ,
+    options:  <%= raw @plot.options %>
+});
+
+function convertCanvasToImage(canvas) {
+  var image = new Image();
+  image.src = canvas[0].toDataURL("image/png");
+  $("#image").html(image);
+  // return image;
+}
+
+// convertCanvasToImage(ctx);
+
+$(".plot_types a").on("click", function(e){
+
+  e.preventDefault();
+
+  // var ctx = $("#myChart");
+
+  $("#type_selected").text($(this).attr("data"));
+
+  // alert($(this).attr("data"));
+  var chartInstance = new Chart(ctx, {
+    type: $(this).attr("data"),
+    data: <%= raw @data %> ,
+    options:  <%= raw @plot.options %>
+    });
+
+
+});
+
+
+</script>
